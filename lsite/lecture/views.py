@@ -2,14 +2,16 @@ from django.shortcuts import render
 from django.http import HttpResponse
 import os
 from lsite.settings import BASE_DIR
+from .models import Slide
 
 def index(request):
-    fpath = os.path.join(BASE_DIR, 'assets/chapter')
-    content = []
-    with open(fpath) as fp:
-        for line in fp:
-            content.append(line)
-    return render(request, 'lecture/index.html', {'chapter': content})
+    slide_list = Slide.objects.order_by('id')
+    return render(request, 'lecture/index.html', {'slide_list': slide_list, 'content': '#main page content'})
 
-def content(request, chapter):
-    return HttpResponse('#content of '+chapter)
+def content(request, slide):
+    slide_list = Slide.objects.order_by('id')
+    content = 'not found'
+    for s in slide_list:
+        if s.title == slide:
+            content = s.content
+    return render(request, 'lecture/index.html', {'slide_list': slide_list, 'content': content})

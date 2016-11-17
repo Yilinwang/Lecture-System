@@ -1,13 +1,18 @@
 <html>
+    <head>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    </head>
     <body>
         <div id="header"><h1>NTU Virtual Instructor</h1></div>
-        <div id="side-bar" style="width:15%;float:left">
-            {% for x in chapter %}
-                <a href="{{x}}">{{x}}</a><br>
+        <div id="side-bar" style="width:15%;float:left;text-align:center;">
+            {% for x in slide_list %}
+                <a href="/lecture/{{x.title}}">{{x.title}}</a><br>
             {% endfor %}
         </div>
         <div id="content" style="width:85%;float:right">
-            #content
+            {{content}}
         </div>
     </body>
 </html>
