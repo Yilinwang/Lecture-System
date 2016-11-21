@@ -14,4 +14,5 @@ def content(request, slide):
     for s in slide_list:
         if s.title == slide:
             content = s.content
-    return render(request, 'lecture/index.html', {'slide_list': slide_list, 'content': content})
+            title = s.title
+    return render(request, 'lecture/index.html', {'slide_list': slide_list, 'content': content, 'title': title})
