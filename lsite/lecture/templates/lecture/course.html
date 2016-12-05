@@ -1,0 +1,90 @@
+<html>
+
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js" integrity="sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.7/js/tether.min.js" integrity="sha384-XTs3FgkjiBgo8qjEjBk0tGmf3wPrWtA6coPfQDfFEY8AnYJwjalXCiosYRBIBZX8" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
+  </head>
+
+  <body>
+
+    <div id="header" style="margin: 15px"><h1>NTU Virtual Instructor</h1></div>
+
+    <div id="side-bar" style="width:15%;float:left;text-align:center;">
+      <div class="panel-group">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse1">Chapter 1</a>
+            </h4>
+          </div>
+          <div id="collapse1" class="panel-collapse collapse">
+            <ul class="list-group">
+              {% for x in slide_list %}
+              <li class="list-group-tiem"><a href="/lecture/{{x}}">{{x}}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="content" style="width:85%;float:right">
+
+      <button class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">video</button>
+      <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-body">
+              <div class="row">
+                <video height="600" width=auto style="text-align: center;" controls>
+                  {% load static %}
+                  <source src="{% static "lecture/1-1.mp4" %}" type="video/mp4" style="width: 720px;">
+                </video>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><br>
+
+      {% load static %}
+      <img src="{% static "lecture/slides/" %}{{title}}.jpg" style="width: 600px"><br><br>
+        
+      <h3 style="color: red;">Keyterms:</h3>
+      <!--
+      <table>
+        {% for x in keyterms %}
+          <tr><h4>{{x.keyterm}}</h4></tr>
+        {% endfor %}
+      </table>
+      -->
+
+      <div class="row">
+        <div class="col-md-4">
+          <div id="keyterms" role="tablist" aria-multiselectable="true">
+            <div class="card">
+
+              {% for key, relations in keyterms.items %}
+              <div class="card-header" role="tab">
+                <a class="collapsed" data-toggle="collapse" href="#{{key}}" aria-expanded="false" aria-controls="{{key}}">{{key}}</a>
+              </div>
+
+                <div id="{{key}}" class="collapse" role="tabpanel">
+                  <div class="card-block">
+                    {% for relation in relations %}
+                      <a href="/lecture/{{x.title}}">{{relation.title}}<br></a>
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endfor %}
+
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8">
+        </div>
+      </div>
+
+  </body>
+</html>

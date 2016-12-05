@@ -11,7 +11,7 @@
 
     <div id="header" style="margin: 15px"><h1>NTU Virtual Instructor</h1></div>
 
-    <div id="side-bar" style="width:15%;float:left;text-align:center;">
+    <div id="side-bar" style="width:14%;float:left;text-align:center;">
       <div class="panel-group">
         <div class="panel panel-default">
           <div class="panel-heading">
@@ -22,47 +22,12 @@
           <div id="collapse1" class="panel-collapse collapse">
             <ul class="list-group">
               {% for x in slide_list %}
-              <li class="list-group-tiem"><a href="/lecture/{{x.title}}">{{x.title}}</a></li>
+              <li class="list-group-tiem"><a href="/lecture/{{x}}">{{x}}</a></li>
               {% endfor %}
             </ul>
           </div>
         </div>
       </div>
     </div>
-
-    <div id="content" style="width:85%;float:right">
-
-      {{content}}<br>
-
-      {% if title == '1-1' %}
-      <button class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">video</button>
-      <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-md-6">
-                  <video height="305" width=auto style="text-align: center;" controls>
-                    {% load static %}
-                    <source src="{% static "lecture/1-1.mp4" %}" type="video/mp4">
-                  </video>
-                </div>
-                <div class="col-md-6">
-                  {% load static %}
-                  <img height ="305" src="{% static "lecture/slides/1-1.jpg" %}">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div><br>
-
-      {% load static %}
-      <img src="{% static "lecture/slides/1-1.jpg" %}"><br>
-
-      {% endif %}
-
-    </div>
-
   </body>
 </html>
