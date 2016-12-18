@@ -14,77 +14,81 @@
     <div id="side-bar" style="width:15%;float:left;text-align:center;">
       <div class="panel-group">
         <div class="panel panel-default">
+
+          {% for c, l in slide_list.items %}
           <div class="panel-heading">
-            <h4 class="panel-title">
-              <a data-toggle="collapse" href="#collapse1">Chapter 1</a>
-            </h4>
+            <h5 class="panel-title">
+              <a data-toggle="collapse" href="#collapse{{c}}">Chapter {{c}}</a>
+            </h5>
           </div>
-          <div id="collapse1" class="panel-collapse collapse">
+
+          <div id="collapse{{c}}" class="panel-collapse collapse">
             <ul class="list-group">
-              {% for x in slide_list %}
-              <li class="list-group-tiem"><a href="/lecture/{{x}}">{{x}}</a></li>
+              {% for i in l %}
+              <li class="list-group-tiem"><a href="/lecture/{{c}}-{{i}}">{{c}}-{{i}}</a></li>
               {% endfor %}
             </ul>
           </div>
+          {% endfor %}
+
         </div>
       </div>
     </div>
 
     <div id="content" style="width:85%;float:right">
 
-      <button class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">video</button>
-      <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-body">
-              <div class="row">
-                <video height="600" width=auto style="text-align: center;" controls>
-                  {% load static %}
-                  <source src="{% static "lecture/1-1.mp4" %}" type="video/mp4" style="width: 720px;">
-                </video>
+      <div class="row">
+        <div class="col-md-7">
+          {% load static %}
+          <img src="{% static "lecture/slides/" %}{{title}}.jpg" style="width: 600px"><br><br>
+        </div>
+            
+        <div class="col-md-5">
+          <h3 style="color: red;">Keyterms:</h3>
+
+          <div class="row">
+            <div class="col-md-4">
+              <div id="keyterms" role="tablist" aria-multiselectable="true">
+                <div class="card">
+
+                  {% for key, relations in keyterms.items %}
+                  <div class="card-header" role="tab">
+                    <a class="collapsed" data-toggle="collapse" href="#{{key}}" aria-expanded="false" aria-controls="{{key}}">{{key}}</a>
+                  </div>
+
+                  <div id="{{key}}" class="collapse" role="tabpanel">
+                    <div class="card-block">
+                      {% for relation in relations %}
+                        <a href="/lecture/{{relation.title}}">{{relation.title}}<br></a>
+                      {% endfor %}
+                    </div>
+                  </div>
+                  {% endfor %}
+
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div><br>
 
-      {% load static %}
-      <img src="{% static "lecture/slides/" %}{{title}}.jpg" style="width: 600px"><br><br>
-        
-      <h3 style="color: red;">Keyterms:</h3>
-      <!--
-      <table>
-        {% for x in keyterms %}
-          <tr><h4>{{x.keyterm}}</h4></tr>
-        {% endfor %}
-      </table>
-      -->
-
-      <div class="row">
-        <div class="col-md-4">
-          <div id="keyterms" role="tablist" aria-multiselectable="true">
-            <div class="card">
-
-              {% for key, relations in keyterms.items %}
-              <div class="card-header" role="tab">
-                <a class="collapsed" data-toggle="collapse" href="#{{key}}" aria-expanded="false" aria-controls="{{key}}">{{key}}</a>
-              </div>
-
-                <div id="{{key}}" class="collapse" role="tabpanel">
-                  <div class="card-block">
-                    {% for relation in relations %}
-                      <a href="/lecture/{{relation.title}}">{{relation.title}}<br></a>
-                    {% endfor %}
+          <button class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">video</button>
+          <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-body">
+                  <div class="row">
+                    <video height="600" width=auto style="text-align: center;" controls>
+                      {% load static %}
+                      <source src="{% static "lecture/1-1.mp4" %}" type="video/mp4" style="width: 720px;">
+                    </video>
                   </div>
                 </div>
-              {% endfor %}
-
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="col-md-8">
+          </div><br>
+
         </div>
       </div>
+    </div>
 
   </body>
 </html>

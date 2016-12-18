@@ -11,6 +11,30 @@
 
     <div id="header" style="margin: 15px"><h1>NTU Virtual Instructor</h1></div>
 
+    <div id="side-bar" style="width:15%;float:left;text-align:center;">
+      <div class="panel-group">
+        <div class="panel panel-default">
+
+          {% for c, l in slide_list.items %}
+          <div class="panel-heading">
+            <h5 class="panel-title">
+              <a data-toggle="collapse" href="#collapse{{c}}">Chapter {{c}}</a>
+            </h5>
+          </div>
+
+          <div id="collapse{{c}}" class="panel-collapse collapse">
+            <ul class="list-group">
+              {% for i in l %}
+              <li class="list-group-tiem"><a href="/lecture/{{c}}-{{i}}">{{c}}-{{i}}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endfor %}
+
+        </div>
+      </div>
+    </div>
+    <!--
     <div id="side-bar" style="width:14%;float:left;text-align:center;">
       <div class="panel-group">
         <div class="panel panel-default">
@@ -29,5 +53,6 @@
         </div>
       </div>
     </div>
+    -->
   </body>
 </html>
