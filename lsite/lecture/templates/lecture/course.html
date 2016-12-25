@@ -9,7 +9,13 @@
 
   <body>
 
-    <div id="header" style="margin: 15px"><h1>NTU Virtual Instructor</h1></div>
+    <div id="header" style="margin: 15px">
+      <h1>NTU Virtual Instructor</h1>
+      <form aciton="" method="get">
+          <input id="query" type="text" name="query">
+          <input type="submit" value="search">
+      </form>
+    </div>
 
     <div id="side-bar" style="width:15%;float:left;text-align:center;">
       <div class="panel-group">
@@ -76,10 +82,13 @@
               <div class="modal-content">
                 <div class="modal-body">
                   <div class="row">
+                    <iframe width="800" height="600" src="https://www.youtube.com/embed/gmzFizSCzN8?list=PLQiJOb4rzQIBW2fOajsCEEWgbT0ac8NsM" frameborder="0" allowfullscreen></iframe>
+                    <!--
                     <video height="600" width=auto style="text-align: center;" controls>
                       {% load static %}
                       <source src="{% static "lecture/1-1.mp4" %}" type="video/mp4" style="width: 720px;">
                     </video>
+                    -->
                   </div>
                 </div>
               </div>

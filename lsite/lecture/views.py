@@ -7,6 +7,7 @@ from .models import Slide
 from .models import SIndex
 
 from collections import defaultdict
+from search import send
 
 def uniqlist():
     slide_list = ['']
@@ -25,6 +26,9 @@ def index(request):
     return render(request, 'lecture/index.html', {'slide_list': dict(slide_list)})
 
 def content(request, slide):
+    #if 'query' in request.GET:
+    #    print(search.send(request.get['query']))
+
     #slide_list = uniqlist()
     slide_list = defaultdict(list)
     for x in SIndex.objects.order_by('chapter'):
