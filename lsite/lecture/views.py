@@ -10,17 +10,7 @@ from .models import KeytermRelation
 from collections import defaultdict
 from search import send
 
-def uniqlist():
-    slide_list = ['']
-    for x in Slidekeyterm.objects.order_by('title'):
-        if x.title != slide_list[-1]:
-            slide_list.append(x.title)
-    slide_list = slide_list[1:]
-    slide_list = sorted(slide_list, key=lambda x: tuple([int(y) for y in x.split('-')]))
-    return slide_list
-
 def index(request):
-    #slide_list = uniqlist()
     slide_list = defaultdict(list)
     for x in Slide.objects.order_by('chapter'):
         slide_list[int(x.chapter)].append(int(x.index))
@@ -38,10 +28,6 @@ def content(request, slide):
     keyterm_relation = {}
     for k in Slidekeyterm.objects.filter(title=slide):
         if not k.keyterm == '':
-            '''
-            keyterms[k.keyterm] = Slidekeyterm.objects.filter(keyterm=k.keyterm)
-            keyterm_relation[k.keyterm] = KeytermRelation.objects.filter(k1=k.keyterm)
-            '''
             keyterms[k.keyterm] = (Slidekeyterm.objects.filter(keyterm=k.keyterm), KeytermRelation.objects.filter(k1=k.keyterm))
 
     for x in slide_list:
