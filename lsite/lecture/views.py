@@ -6,6 +6,7 @@ from lsite.settings import BASE_DIR
 from .models import Slidekeyterm
 from .models import Slide
 from .models import KeytermRelation
+from .models import VideoAttr
 
 from collections import defaultdict
 from search import send
@@ -37,4 +38,10 @@ def content(request, slide):
 
     index = slide.split('-', 1)
 
-    return render(request, 'lecture/course.html', {'slide_list': dict(slide_list), 'ch': index[0], 'title': index[1], 'keyterms': keyterms, 'keyterm_relation': keyterm_relation})
+    video = None
+    for x in VideoAttr.objects.filter(title=slide):
+        video = x
+
+        #VideoAttr(title='1', prev_ch=1, cur_ch=1, ch_time='1', prev_subch=1, cur_subch=1, subch_time='1', prev = 1, cur = 1, time='1')
+
+    return render(request, 'lecture/course.html', {'slide_list': dict(slide_list), 'ch': index[0], 'title': index[1], 'keyterms': keyterms, 'keyterm_relation': keyterm_relation, 'prev_ch': x.prev_ch, 'cur_ch': x.cur_ch, 'ch_time': x.ch_time, 'prev_subch': x.prev_subch, 'cur_subch': x.cur_subch, 'subch_time': x.subch_time, 'prev': x.prev, 'cur': x.cur, 'time': x.time})

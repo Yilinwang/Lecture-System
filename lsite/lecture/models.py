@@ -12,3 +12,15 @@ class Slide(models.Model):
     chapter = models.DecimalField(max_digits=10, decimal_places=0)
     subchapter = models.DecimalField(max_digits=10, decimal_places=0)
     page = models.DecimalField(max_digits=10, decimal_places=0)
+
+class VideoAttr(models.Model):
+    title = models.CharField(max_length=256)
+    prev_ch = models.DecimalField(max_digits=10, decimal_places=0)
+    cur_ch = models.DecimalField(max_digits=10, decimal_places=0)
+    ch_time = models.CharField(max_length=256)
+    prev_subch = models.DecimalField(max_digits=10, decimal_places=0)
+    cur_subch = models.DecimalField(max_digits=10, decimal_places=0)
+    subch_time = models.CharField(max_length=256)
+    prev = models.DecimalField(max_digits=10, decimal_places=0)
+    cur = models.DecimalField(max_digits=10, decimal_places=0)
+    time = models.CharField(max_length=256)
