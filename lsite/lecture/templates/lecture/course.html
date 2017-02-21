@@ -39,16 +39,6 @@
 			</div>
 		</nav>
 
-		<!--
-    <div id="header" style="margin: 15px">
-      <h1>NTU Virtual Instructor</h1>
-      <form aciton="" method="get">
-        <input id="query" type="text" name="query">
-        <input type="submit" value="search">
-      </form>
-    </div>
-    -->
-
     <div class="row">
       <div class="col-md-2" id="side-bar" style="text-align:center; overflow-y: scroll">
         <div class="panel-group">
@@ -79,37 +69,32 @@
       <div class="col-md-7" style="text-align: center;">
         <div style="text-align: left;">
           <h3>{{ch}}.{{title}}</h3>
+          {% if v != None %}
           <h6>time span of this chapter:</h6>
           <div class="progress" style="margin: 5px;">
-            <div class="progress-bar bg-gray" role="progressbar" style="width: {{prev_ch}}%;" aria-valuenow="{{prev_ch}}" aria-valuemin="0" aria-valuemax="100"></div>
-            <div class="progress-bar bg-success" role="progressbar" style="width: {{cur_ch}}%;" aria-valuenow="{{cur_ch}}" aria-valuemin="0" aria-valuemax="100">{{ch_time}}</div>
+            <div class="progress-bar bg-gray" role="progressbar" style="width: {{v.prev_ch}}%;" aria-valuenow="{{v.prev_ch}}" aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="progress-bar bg-success" role="progressbar" style="width: {{v.cur_ch}}%;" aria-valuenow="{{v.cur_ch}}" aria-valuemin="0" aria-valuemax="100">{{v.ch_time}}</div>
           </div>
           <h6>time span of this subchapter:</h6>
           <div class="progress" style="margin: 5px">
-            <div class="progress-bar bg-gray" role="progressbar" style="width: {{prev_subch}}%;" aria-valuenow="{{prev_subch}}" aria-valuemin="0" aria-valuemax="100"></div>
-            <div class="progress-bar bg-success" role="progressbar" style="width: {{cur_subch}}%;" aria-valuenow="{{cur_subch}}" aria-valuemin="0" aria-valuemax="100">{{subch_time}}</div>
+            <div class="progress-bar bg-gray" role="progressbar" style="width: {{v.prev_subch}}%;" aria-valuenow="{{v.prev_subch}}" aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="progress-bar bg-success" role="progressbar" style="width: {{v.cur_subch}}%;" aria-valuenow="{{v.cur_subch}}" aria-valuemin="0" aria-valuemax="100">{{v.subch_time}}</div>
           </div>
           <h6>time span of this slide:</h6>
           <div class="progress" style="margin: 5px">
-            <div class="progress-bar bg-gray" role="progressbar" style="width: {{prev}}%;" aria-valuenow="{{prev}}" aria-valuemin="0" aria-valuemax="100"></div>
-            <div class="progress-bar bg-success" role="progressbar" style="width: {{cur}}%;" aria-valuenow="{{cur}}" aria-valuemin="0" aria-valuemax="100">00:{{time}}</div>
+            <div class="progress-bar bg-gray" role="progressbar" style="width: {{v.prev}}%;" aria-valuenow="{{v.prev}}" aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="progress-bar bg-success" role="progressbar" style="width: {{v.cur}}%;" aria-valuenow="{{v.cur}}" aria-valuemin="0" aria-valuemax="100">00:{{v.time}}</div>
           </div>
         </div>
         {% load static %}
         <img src="{% static "lecture/slides/" %}{{ch}}/{{title}}.jpg" style="width: 550px"><br><br>
-        <!--
-        <div class="row">
-          <div class="col-md-6" style="text-align: left;"><button type="button" class="btn btn-secondary">previous</button></div>
-          <div class="col-md-6" style="text-align: right;"><button type="button" class="btn btn-secondary">next</button></div>
-        </div>
-        -->
       </div>
 
       <div class="col-md-3" id="scroll" style="height: 600px;text-align: center; overflow-y: scroll;">
         <button class="btn btn-info">summary<br>(time)</button>
         {% load static %}
         <a href="{% static "lecture/videos/" %}{{ch}}-{{title}}.mp4" data-toggle="lightbox" data-type="video" data-width="1280">
-          <button class="btn btn-primary">whole lecture<br>(00:{{time}})</button>
+          <button class="btn btn-primary">whole lecture<br>(00:{{v.time}})</button>
         </a>
         <h3 style="color: red;">Keyterms:</h3>
         <div id="keyterms" role="tablist" aria-multiselectable="true">
@@ -129,6 +114,11 @@
             {% endfor %}
           </div>
         </div>
+        {% else %}
+        there is no video for this slide
+        {% load static %}
+        <img src="{% static "lecture/slides/" %}{{ch}}/{{title}}.jpg" style="width: 550px"><br><br>
+        {% endif %}
       </div>
     </div>
 

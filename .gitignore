@@ -1,4 +1,6 @@
+*/__pycache__/
 .DS_Store
+*.py[cod]
 *.swp
 *.mp4
-__pycache__/
+material/

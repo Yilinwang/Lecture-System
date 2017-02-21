@@ -8,6 +8,118 @@
   </head>
 
   <body>
+		<nav class="navbar navbar-toggleable-md navbar-light bg-faded" style="background-color: #fff;">
+			<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+      <a class="navbar-brand" href="#"><h2>NTU Virtual Instructor</h2></a>
+
+			<div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+				<ul class="navbar-nav mr-auto mt-2 mt-md-0"> </ul>
+				<form class="form-inline my-2 my-lg-0">
+					<input class="form-control mr-sm-2" type="text" placeholder="Search">
+					<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+				</form>
+			</div>
+		</nav>
+
+		<!--
+    <div id="header" style="margin: 15px">
+      <h1>NTU Virtual Instructor</h1>
+      <form aciton="" method="get">
+        <input id="query" type="text" name="query">
+        <input type="submit" value="search">
+      </form>
+    </div>
+    -->
+
+    <div class="row">
+      <div class="col-md-2" id="side-bar" style="text-align:center; overflow-y: scroll">
+        <div class="panel-group">
+          <div class="panel panel-default">
+            {% for c, l in slide_list.items %}
+            <div class="panel-heading">
+              <h5 class="panel-title">
+                <a data-toggle="collapse" href="#collapse{{c}}">Chapter {{c}}</a>
+              </h5>
+            </div>
+            <div id="collapse{{c}}" class="panel-collapse collapse">
+              <ul class="list-group">
+                {% for sc, ll in l.items %}
+                <li class="list-group-title"><a data-toggle="collapse" href="#collapse{{c}}{{sc}}{{sc}}">{{c}}.{{sc}}</a></li>
+                <div id="collapse{{c}}{{sc}}{{sc}}" class="panel-collapse collapse">
+                        {% for i in ll %}
+                        <li class="list-group-tiem"><a href="/lecture/{{c}}-{{sc}}-{{i}}">{{c}}.{{sc}}-{{i}}</a></li>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+        <!--
+      <div class="col-md-7" style="text-align: center;">
+        <div style="text-align: left;">
+          <h3>{{ch}}.{{title}}</h3>
+          <h6>time span of this chapter:</h6>
+          <div class="progress" style="margin: 5px;">
+            <div class="progress-bar bg-gray" role="progressbar" style="width: {{prev_ch}}%;" aria-valuenow="{{prev_ch}}" aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="progress-bar bg-success" role="progressbar" style="width: {{cur_ch}}%;" aria-valuenow="{{cur_ch}}" aria-valuemin="0" aria-valuemax="100">{{ch_time}}</div>
+          </div>
+          <h6>time span of this subchapter:</h6>
+          <div class="progress" style="margin: 5px">
+            <div class="progress-bar bg-gray" role="progressbar" style="width: {{prev_subch}}%;" aria-valuenow="{{prev_subch}}" aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="progress-bar bg-success" role="progressbar" style="width: {{cur_subch}}%;" aria-valuenow="{{cur_subch}}" aria-valuemin="0" aria-valuemax="100">{{subch_time}}</div>
+          </div>
+          <h6>time span of this slide:</h6>
+          <div class="progress" style="margin: 5px">
+            <div class="progress-bar bg-gray" role="progressbar" style="width: {{prev}}%;" aria-valuenow="{{prev}}" aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="progress-bar bg-success" role="progressbar" style="width: {{cur}}%;" aria-valuenow="{{cur}}" aria-valuemin="0" aria-valuemax="100">00:{{time}}</div>
+          </div>
+        </div>
+        {% load static %}
+        <img src="{% static "lecture/slides/" %}{{ch}}/{{title}}.jpg" style="width: 550px"><br><br>
+        <div class="row">
+          <div class="col-md-6" style="text-align: left;"><button type="button" class="btn btn-secondary">previous</button></div>
+          <div class="col-md-6" style="text-align: right;"><button type="button" class="btn btn-secondary">next</button></div>
+        </div>
+      </div>
+
+      <div class="col-md-3" id="scroll" style="height: 600px;text-align: center; overflow-y: scroll;">
+        <button class="btn btn-info">summary<br>(time)</button>
+        {% load static %}
+        <a href="{% static "lecture/videos/" %}{{ch}}-{{title}}.mp4" data-toggle="lightbox" data-type="video" data-width="1280">
+          <button class="btn btn-primary">whole lecture<br>(00:{{time}})</button>
+        </a>
+        <h3 style="color: red;">Keyterms:</h3>
+        <div id="keyterms" role="tablist" aria-multiselectable="true">
+          <div class="card">
+            {% for key, relations in keyterms.items %}
+            <div class="card-header" role="tab">
+              <a class="collapsed" data-toggle="collapse" href="#{{key}}" aria-expanded="false" aria-controls="{{key}}" data-trigger="hovernonono" data-content="{% for x in relations.0 %}{{x.title}}<br>{% endfor %}">{{key}}</a>
+            </div>
+            <div id="{{key}}" class="collapse" role="tabpanel">
+              <div class="card-block">
+                related keyterms:<br>
+                {% for relation in relations.1 %}
+                <a href="/lecture/{{relation.title}}">{{relation.k2}}<br></a>
+                {% endfor %}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        -->
+      </div>
+    </div>
+
+  </body>
+
+  <!--
+  <body>
 
     <div id="header" style="margin: 15px"><h1>NTU Virtual Instructor</h1></div>
 
@@ -34,7 +146,6 @@
         </div>
       </div>
     </div>
-    <!--
     <div id="side-bar" style="width:14%;float:left;text-align:center;">
       <div class="panel-group">
         <div class="panel panel-default">
@@ -53,6 +164,6 @@
         </div>
       </div>
     </div>
-    -->
   </body>
+    -->
 </html>
