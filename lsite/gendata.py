@@ -75,7 +75,7 @@ def m():
     tmp = VideoAttr(title='1', prev_ch=1, cur_ch=1, ch_time='1', prev_subch=1, cur_subch=1, subch_time='1', prev = 1, cur = 1, time='1')
 
 def main():
-    video()
+    addkeyterm('1-0-3', 'k1')
 
 if __name__ == '__main__':
     main()

@@ -9,12 +9,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.1.1/ekko-lightbox.min.js" integrity="sha256-1odJPEl+KoMUaA1T7QNMGSSU/r5LCKCRC6SL8P0r2gY=" crossorigin="anonymous"></script>
     <script>
         $(function () {
-            $('[data-trigger="hover"]').popover({html: true})
+            $('[data-trigger="hover"]').popover({html: true, placement: "left"})
         })
         $(document).on('click', '[data-toggle="lightbox"]', function(event) {
             event.preventDefault();
             $(this).ekkoLightbox();
         });
+        $('#myModal').on('shown.bs.modal', function () {
+            $('#myInput').focus()
+        })
     </script>
     <style>
       .bg-gray {
@@ -24,23 +27,24 @@
   </head>
 
   <body>
-		<nav class="navbar navbar-toggleable-md navbar-light bg-faded" style="background-color: #fff;">
+
+		<nav class="navbar navbar-fixed-top navbar-toggleable-md navbar-light bg-faded" style="background-color: #fff;">
 			<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
-      <a class="navbar-brand" href="#"><h2>NTU Virtual Instructor</h2></a>
+      <a class="navbar-brand" href="/lecture/"><h2>NTU Virtual Instructor</h2></a>
 
 			<div class="collapse navbar-collapse" id="navbarTogglerDemo02">
 				<ul class="navbar-nav mr-auto mt-2 mt-md-0"> </ul>
-				<form class="form-inline my-2 my-lg-0">
-					<input class="form-control mr-sm-2" type="text" placeholder="Search">
+				<form class="form-inline my-2 my-lg-0" action="/lecture/search/" method="get">
+					<input class="form-control mr-sm-2" type="text" name="q" placeholder="Search by Speech">
 					<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 				</form>
 			</div>
 		</nav>
 
     <div class="row">
-      <div class="col-md-2" id="side-bar" style="text-align:center; overflow-y: scroll">
+      <div class="col-md-2" id="side-bar" style="height: 600px; text-align:center; overflow-y: scroll">
         <div class="panel-group">
           <div class="panel panel-default">
             {% for c, l in slide_list.items %}
@@ -49,7 +53,11 @@
                 <a data-toggle="collapse" href="#collapse{{c}}">Chapter {{c}}</a>
               </h5>
             </div>
+            {% if c == ch %}
+            <div id="collapse{{c}}" class="panel-collapse collapse show">
+            {% else %}
             <div id="collapse{{c}}" class="panel-collapse collapse">
+            {% endif %}
               <ul class="list-group">
                 {% for sc, ll in l.items %}
                 <li class="list-group-title"><a data-toggle="collapse" href="#collapse{{c}}{{sc}}{{sc}}">{{c}}.{{sc}}</a></li>
@@ -67,6 +75,7 @@
       </div>
 
       <div class="col-md-7" style="text-align: center;">
+        {% load functions %}
         <div style="text-align: left;">
           <h3>{{ch}}.{{title}}</h3>
           {% if v != None %}
@@ -96,18 +105,67 @@
         <a href="{% static "lecture/videos/" %}{{ch}}-{{title}}.mp4" data-toggle="lightbox" data-type="video" data-width="1280">
           <button class="btn btn-primary">whole lecture<br>(00:{{v.time}})</button>
         </a>
-        <h3 style="color: red;">Keyterms:</h3>
-        <div id="keyterms" role="tablist" aria-multiselectable="true">
+        <div style="margin: 15px;"> <h3 style="color: red;">Key Terms:</h3></div>
+        <div id="keyterms" role="tablist" aria-multiselectable="true" style="margin: 15px;">
           <div class="card">
             {% for key, relations in keyterms.items %}
             <div class="card-header" role="tab">
-              <a class="collapsed" data-toggle="collapse" href="#{{key}}" aria-expanded="false" aria-controls="{{key}}" data-trigger="hovernonono" data-content="{% for x in relations.0 %}{{x.title}}<br>{% endfor %}">{{key}}</a>
+              <a class="collapsed" data-toggle="collapse" href="#{{key}}" aria-expanded="false" aria-controls="{{key}}" data-trigger="hover" data-content="key term appearing in this slide">{{key}}</a>
             </div>
             <div id="{{key}}" class="collapse" role="tabpanel">
               <div class="card-block">
+                <a href="#" data-toggle="modal" data-target="#t{{key}}" data-trigger="hover" data-content="key term appearing in this slide">{{key}}</a><br>
+                <div class="modal fade" id="t{{key}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">{{key}}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body" style="text-align: left;">
+                        <h6>This key term first appears in slide:</h6>
+                        {% for x in keyterm_attr|getfirst:key %}
+                        <p><a href="/lecture/{{x.0}}"> {{x.1}}</a></p>
+                        {% endfor %}
+                        <h6>Also appears in slides: </h6>
+                        <p>
+                        {% for x in keyterm_attr|getrelated:key %}
+                        <a href="/lecture/{{x.0}}">{{x.1}}</a>
+                        {% endfor %}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 related keyterms:<br>
-                {% for relation in relations.1 %}
-                <a href="/lecture/{{relation.title}}">{{relation.k2}}<br></a>
+                {% for relation in relations %}
+                <a href="#" data-toggle="modal" data-target="#{{key}}{{relation.k2}}" data-trigger="hover" data-content="key term not appearing in this slide but related to {{key}}">{{relation.k2}}</a><br>
+                <div class="modal fade" id="{{key}}{{relation.k2}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">{{relation.k2}}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body" style="text-align: left;">
+                        <h6>This key term first appears in slide:</h6>
+                        {% for x in keyterm_attr|getfirst:relation.k2 %}
+                        <p><a href="/lecture/{{x.0}}"> {{x.1}}</a></p>
+                        {% endfor %}
+                        <h6>Also appears in slides: </h6>
+                        <p>
+                        {% for x in keyterm_attr|getrelated:relation.k2 %}
+                        <a href="/lecture/{{x.0}}">{{x.1}}</a>
+                        {% endfor %}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 {% endfor %}
               </div>
             </div>

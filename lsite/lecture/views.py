@@ -9,7 +9,7 @@ from .models import KeytermRelation
 from .models import VideoAttr
 
 from collections import defaultdict
-from search import send
+from subprocess import Popen, PIPE
 
 def mk_slide_list():
     slide_list = defaultdict(lambda: defaultdict(list))
@@ -22,26 +22,37 @@ def mk_slide_list():
             slide_list[x][y] = sorted(slide_list[x][y])
     return dict(slide_list)
 
-def index(request):
-    slide_list = mk_slide_list()
-    return render(request, 'lecture/index.html', {'slide_list': slide_list})
+def search(request):
+    if 'q' in request.GET:
+        p = Popen(['/bin/echo', request.GET['q']], stdout=PIPE)
+        stdout, stderr = p.communicate()
+        num = 2
+        return render(request, 'lecture/search.html', {'q': request.GET['q'], 'out': stdout, 'num': num})
+    else:
+        slide_list = mk_slide_list()
+        return render(request, 'lecture/index.html', {'slide_list': slide_list})
 
 def content(request, slide):
-    #if 'query' in request.GET:
-    #    print(search.send(request.get['query']))
-
     slide_list = mk_slide_list()
 
     keyterms = {}
-    keyterm_relation = {}
+    tmp = [x.keyterm for x in Slidekeyterm.objects.filter(title=slide)]
     for k in Slidekeyterm.objects.filter(title=slide):
         if not k.keyterm == '':
-            keyterms[k.keyterm] = (Slidekeyterm.objects.filter(keyterm=k.keyterm), KeytermRelation.objects.filter(k1=k.keyterm))
+            r = KeytermRelation.objects.filter(k1=k.keyterm)
+            keyterms[k.keyterm] = r
+            tmp.extend([x.k2 for x in r])
+            tmp.extend([x.k1 for x in r])
 
-    index = slide.split('-', 1)
+    keyterm_attr = {}
+    for k in set(tmp):
+        attr = sorted(set([x.title for x in Slidekeyterm.objects.filter(keyterm=k)]))
+        keyterm_attr[k] = (attr[0], attr[1:])
+
+    index = slide.split('-')
 
     v = None
     for x in VideoAttr.objects.filter(title=slide):
         v = x
 
-    return render(request, 'lecture/course.html', {'slide_list': slide_list, 'ch': index[0], 'title': index[1], 'keyterms': keyterms, 'keyterm_relation': keyterm_relation, 'v': v})
+    return render(request, 'lecture/course.html', {'slide_list': slide_list, 'ch': int(index[0]), 'title': index[1]+'-'+index[2], 'subch': int(index[1]), 'keyterms': keyterms, 'keyterm_attr': keyterm_attr, 'v': v})

@@ -1,0 +1,79 @@
+<html>
+
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.1.1/ekko-lightbox.min.css" integrity="sha256-8aNQFtmxcOMVoOhLD4mrHqaKC2Ui++LmlQsoKTqxwIE=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.1.1/ekko-lightbox.min.js" integrity="sha256-1odJPEl+KoMUaA1T7QNMGSSU/r5LCKCRC6SL8P0r2gY=" crossorigin="anonymous"></script>
+    <script>
+        $(function () {
+            $('[data-trigger="hover"]').popover({html: true, placement: "left"})
+        })
+        $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+            event.preventDefault();
+            $(this).ekkoLightbox();
+        });
+        $('#myModal').on('shown.bs.modal', function () {
+            $('#myInput').focus()
+        })
+    </script>
+    <style>
+      .bg-gray {
+        background-color: #eeeeee;
+      } 
+    </style>
+  </head>
+
+  <body>
+
+		<nav class="navbar navbar-fixed-top navbar-toggleable-md navbar-light bg-faded" style="background-color: #fff;">
+			<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+      <a class="navbar-brand" href="/lecture/"><h2>NTU Virtual Instructor</h2></a>
+
+			<div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+				<ul class="navbar-nav mr-auto mt-2 mt-md-0"> </ul>
+				<form class="form-inline my-2 my-lg-0" action="/lecture/search/" method="get">
+          <input class="form-control mr-sm-2" type="text" name="q" placeholder="{{q}}">
+					<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+				</form>
+			</div>
+		</nav>
+
+    <div style="margin-left: 20px; margin-right: 30px;">
+      <h4 style="color: #a9a9a9;">About {{num}} Results for Term "{{q}}"</h4>
+       
+      <div class="list-group ">
+        <div class="list-group-item flex-column">
+          <div class="d-flex w-100 justify-content-between">
+            <div>
+              <a href="/lecture/1-0-1/" class="align-self-center"><h5>1.0-1</h5></a>
+              <p>(transcription: ...)</p>
+            </div>
+            <div class="align-self-center">
+              <button class="btn btn-info">summary<br>(time)</button>
+              <button class="btn btn-primary">whole lecture<br>(time)</button>
+            </div>
+          </div>
+        </div>
+        <div class="list-group-item flex-column">
+          <div class="d-flex w-100 justify-content-between">
+            <div>
+              <a href="/lecture/1-0-2/" class="align-self-center"><h5>1.0-2</h5></a>
+              <p>(transcription: ...)</p>
+            </div>
+            <div class="align-self-center">
+              <button class="btn btn-info">summary<br>(time)</button>
+              <button class="btn btn-primary">whole lecture<br>(time)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </body>
+
+</html>
