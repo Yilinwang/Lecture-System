@@ -12,6 +12,7 @@ from lecture.models import KeytermRelation
 from lecture.models import VideoAttr
 
 from glob import glob
+import pptx
 
 def clean():
     Slide.objects.all().delete()
@@ -74,8 +75,24 @@ def video():
 def m():
     tmp = VideoAttr(title='1', prev_ch=1, cur_ch=1, ch_time='1', prev_subch=1, cur_subch=1, subch_time='1', prev = 1, cur = 1, time='1')
 
+def text_title():
+    l = sorted(list(Slide.objects.filter(chapter=10)), key=lambda x: (x.chapter, x.subchapter, x.page))
+    p = pptx.Presentation('/Users/yilin/Documents/NTU/16fall/lecture_sys/material/Slide/ppt/course10.0.pptx')
+    i = 0
+    for s in p.slides:
+        title = ''
+        for x in s.shapes:
+            if type(x) == pptx.shapes.autoshape.Shape:
+                title = x.text.split('\n')[0].strip()
+                break
+        print(title, l[i].chapter, l[i].subchapter, l[i].page)
+        l[i].title = title
+        l[i].save()
+        i += 1
+    print(len(l), len(p.slides))
+
 def main():
-    addkeyterm('1-0-3', 'k1')
+    pass
 
 if __name__ == '__main__':
     main()

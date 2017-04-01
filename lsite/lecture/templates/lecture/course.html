@@ -62,11 +62,13 @@
             <div id="collapse{{c}}" class="panel-collapse collapse">
             {% endif %}
               <ul class="list-group">
-                {% load static %}
-                <li class="list-group-title"><a href="{% static "lecture/videos/" %}{{c}}-1-1.mp4" data-toggle="lightbox" data-type="video" data-width="1280">summary<br>(time)</a></li>
                 {% for sc, ll in l.items %}
                 <li class="list-group-title"><a data-toggle="collapse" href="#collapse{{c}}{{sc}}{{sc}}">{{c}}.{{sc}}</a></li>
+                {% if subch == sc and c == ch %}
+                <div id="collapse{{c}}{{sc}}{{sc}}" class="panel-collapse collapse show">
+                {% else %}
                 <div id="collapse{{c}}{{sc}}{{sc}}" class="panel-collapse collapse">
+                {% endif %}
                         {% for i in ll %}
                         <li class="list-group-tiem"><a href="/lecture/{{c}}-{{sc}}-{{i}}">{{c}}.{{sc}}-{{i}}</a></li>
                         {% endfor %}
@@ -82,7 +84,7 @@
       <div class="col-md-7" style="text-align: center;">
         {% load functions %}
         <div style="text-align: left;">
-          <h3>{{ch}}.{{title}}</h3>
+          <h4>{{ch}}.{{title}} <font face="serif"><u><b>{{title_text}}</b></u></font></h4>
           {% if v != None %}
           <h6>time span of this chapter:</h6>
           <div class="progress" style="margin: 5px;">

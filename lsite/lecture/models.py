@@ -12,6 +12,8 @@ class Slide(models.Model):
     chapter = models.DecimalField(max_digits=10, decimal_places=0)
     subchapter = models.DecimalField(max_digits=10, decimal_places=0)
     page = models.DecimalField(max_digits=10, decimal_places=0)
+    video_title = models.CharField(max_length=256)
+    title = models.CharField(max_length=256)
 
 class VideoAttr(models.Model):
     title = models.CharField(max_length=256)

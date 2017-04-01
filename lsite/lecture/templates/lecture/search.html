@@ -47,38 +47,28 @@
       <h4 style="color: #a9a9a9;">About {{num}} Results for Term "{{q}}"</h4>
        
       <div class="list-group ">
+        
+        {% load functions %}
+        {% for title in result %}
         <div class="list-group-item flex-column">
           <div class="d-flex w-100 justify-content-between">
             <div>
-              <a href="/lecture/1-0-1/" class="align-self-center"><h5>1.0-1</h5></a>
+              <a href="/lecture/{{title}}/" class="align-self-center"><h5>{{title}}</h5></a>
               <p>(transcription:)<br>
               Key terms related to this slide:</p>
+
             </div>
             <div class="align-self-center">
               <button class="btn btn-info">summary<br>(time)</button>
               {% load static %}
-              <a href="{% static "lecture/videos/1-0-1.mp4" %}" data-toggle="lightbox" data-type="video" data-width="1280">
-                <button class="btn btn-primary">whole lecture<br>(00:00:07)</button>
+              <a href="{% static "lecture/videos/" %}{{title}}.mp4" data-toggle="lightbox" data-type="video" data-width="1280">
+                <button class="btn btn-primary">whole lecture<br>({{video_time|vtime:title}})</button>
               </a>
             </div>
           </div>
         </div>
-        <div class="list-group-item flex-column">
-          <div class="d-flex w-100 justify-content-between">
-            <div>
-              <a href="/lecture/1-0-2/" class="align-self-center"><h5>1.0-2</h5></a>
-              <p>(transcription:)<br>
-              Key terms related to this slide:</p>
-            </div>
-            <div class="align-self-center">
-              <button class="btn btn-info">summary<br>(time)</button>
-              {% load static %}
-              <a href="{% static "lecture/videos/1-0-2.mp4" %}" data-toggle="lightbox" data-type="video" data-width="1280">
-                <button class="btn btn-primary">whole lecture<br>(00:00:42)</button>
-              </a>
-            </div>
-          </div>
-        </div>
+        {% endfor %}
+
       </div>
     </div>
     

@@ -9,3 +9,7 @@ def getfirst(kdict, k):
 @register.filter
 def getrelated(kdict, k):
     return [(x, x.replace('-', '.', 1)) for x in kdict[k][1]]
+
+@register.filter
+def vtime(vdict, title):
+    return vdict[title]

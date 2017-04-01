@@ -15,26 +15,19 @@ def mk_slide_list():
     slide_list = defaultdict(lambda: defaultdict(list))
     for x in Slide.objects.order_by('chapter'):
         slide_list[int(x.chapter)][int(x.subchapter)].append(int(x.page))
-
     for x in slide_list:
         slide_list[x] = dict(slide_list[x])
         for y in slide_list[x]:
             slide_list[x][y] = sorted(slide_list[x][y])
     return dict(slide_list)
 
-def search(request):
-    if 'q' in request.GET:
-        p = Popen(['/bin/echo', request.GET['q']], stdout=PIPE)
-        stdout, stderr = p.communicate()
-        num = 2
-        return render(request, 'lecture/search.html', {'q': request.GET['q'], 'out': stdout, 'num': num})
-    else:
-        slide_list = mk_slide_list()
-        return render(request, 'lecture/index.html', {'slide_list': slide_list})
+def getvideoattr(slide):
+    v = None
+    for x in VideoAttr.objects.filter(title=slide):
+        v = x
+    return v
 
-def content(request, slide):
-    slide_list = mk_slide_list()
-
+def getkeyterm(slide):
     keyterms = {}
     tmp = [x.keyterm for x in Slidekeyterm.objects.filter(title=slide)]
     for k in Slidekeyterm.objects.filter(title=slide):
@@ -43,16 +36,30 @@ def content(request, slide):
             keyterms[k.keyterm] = r
             tmp.extend([x.k2 for x in r])
             tmp.extend([x.k1 for x in r])
-
     keyterm_attr = {}
     for k in set(tmp):
         attr = sorted(set([x.title for x in Slidekeyterm.objects.filter(keyterm=k)]))
         keyterm_attr[k] = (attr[0], attr[1:])
+    return keyterms, keyterm_attr
 
+def search(request):
+    if 'q' in request.GET:
+        p = Popen(['/bin/echo', request.GET['q']], stdout=PIPE)
+        stdout, stderr = p.communicate()
+        num = 2
+        result = ['1-0-1', '1-0-2']
+        video_time = {}
+        for x in result:
+            video_time[x] = '00:'+getvideoattr(x).time
+        return render(request, 'lecture/search.html', {'q': request.GET['q'], 'out': stdout, 'num': num, 'result': result, 'video_time': video_time})
+    else:
+        slide_list = mk_slide_list()
+        return render(request, 'lecture/index.html', {'slide_list': slide_list})
+
+def content(request, slide):
+    slide_list = mk_slide_list()
+    keyterms, keyterm_attr = getkeyterm(slide)
+    video_attr = getvideoattr(slide)
     index = slide.split('-')
-
-    v = None
-    for x in VideoAttr.objects.filter(title=slide):
-        v = x
-
-    return render(request, 'lecture/course.html', {'slide_list': slide_list, 'ch': int(index[0]), 'title': index[1]+'-'+index[2], 'subch': int(index[1]), 'keyterms': keyterms, 'keyterm_attr': keyterm_attr, 'v': v})
+    title_text = Slide.objects.filter(chapter=int(index[0])).filter(subchapter=int(index[1])).filter(page=int(index[2]))[0].title
+    return render(request, 'lecture/course.html', {'slide_list': slide_list, 'ch': int(index[0]), 'title': index[1]+'-'+index[2], 'subch': int(index[1]), 'keyterms': keyterms, 'keyterm_attr': keyterm_attr, 'v': video_attr, 'title_text': title_text})
