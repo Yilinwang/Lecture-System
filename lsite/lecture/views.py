@@ -28,6 +28,12 @@ def getvideoattr(slide):
         v = x
     return v
 
+def getsummaryattr(slide):
+    s = None
+    for x in SumAttr.objects.filter(title=slide):
+        s = x
+    return s
+
 def getkeyterm(slide):
     keyterms = {}
     tmp = [x.keyterm for x in Slidekeyterm.objects.filter(title=slide)]
@@ -63,5 +69,5 @@ def content(request, slide):
     video_attr = getvideoattr(slide)
     index = slide.split('-')
     title_text = Slide.objects.filter(chapter=int(index[0])).filter(subchapter=int(index[1])).filter(page=int(index[2]))[0].title
-    summary_attr = SumAttr.objects.filter(title=slide)[0]
-    return render(request, 'lecture/course.html', {'slide_list': slide_list, 'ch': int(index[0]), 'title': index[1]+'-'+index[2], 'subch': int(index[1]), 'keyterms': keyterms, 'keyterm_attr': keyterm_attr, 'v': video_attr, 'title_text': title_text, 's_time': summary_attr.time, 'bs_time': summary_attr.brief_time})
+    summary_attr = getsummaryattr(slide)
+    return render(request, 'lecture/course.html', {'slide_list': slide_list, 'ch': int(index[0]), 'title': index[1]+'-'+index[2], 'subch': int(index[1]), 'keyterms': keyterms, 'keyterm_attr': keyterm_attr, 'v': video_attr, 'title_text': title_text, 'summary_attr': summary_attr})

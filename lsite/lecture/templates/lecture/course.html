@@ -110,10 +110,10 @@
         <div style="margin: 5px;">
           {% load static %}
           <a href="{% static "lecture/videos/brief_summary/" %}{{ch}}-{{title}}.mp4" data-toggle="lightbox" data-type="video" data-width="1280">
-            <button class="btn btn-info">brief summary<br>(00:{{bs_time}})</button>
+            <button class="btn btn-info">brief summary<br>(00:{{summary_attr.brief_time}})</button>
           </a>
           <a href="{% static "lecture/videos/summary/" %}{{ch}}-{{title}}.mp4" data-toggle="lightbox" data-type="video" data-width="1280">
-            <button class="btn btn-info">summary<br>(00:{{s_time}})</button>
+            <button class="btn btn-info">summary<br>(00:{{summary_attr.time}})</button>
           </a>
         </div>
         <a href="{% static "lecture/videos/whole/" %}{{ch}}-{{title}}.mp4" data-toggle="lightbox" data-type="video" data-width="1280">
