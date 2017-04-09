@@ -10,6 +10,7 @@ from lecture.models import Slide
 from lecture.models import Slidekeyterm
 from lecture.models import KeytermRelation
 from lecture.models import VideoAttr
+from lecture.models import SumAttr
 
 from glob import glob
 import pptx
@@ -40,6 +41,22 @@ def percentage(a):
         return 0
     p = round(a*100)
     return p if p > 0 else 1
+
+def sumvideo():
+    s = defaultdict(lambda: defaultdict(list))
+    bs = defaultdict(lambda: defaultdict(list))
+    for x in glob('lecture/static/lecture/videos/brief_summary/*.mp4'):
+        title = x.split('/')[-1].split('.')[0]
+        time = subprocess.run(['ffprobe', x], stderr=subprocess.PIPE).stderr.strip().split(b'Duration: ')[1].split(b',')[0].split(b'.')[0].split(b':', 1)[1].decode('ascii')
+        s[title] = time
+    for x in glob('lecture/static/lecture/videos/summary/*.mp4'):
+        title = x.split('/')[-1].split('.')[0]
+        time = subprocess.run(['ffprobe', x], stderr=subprocess.PIPE).stderr.strip().split(b'Duration: ')[1].split(b',')[0].split(b'.')[0].split(b':', 1)[1].decode('ascii')
+        bs[title] = time
+    for t in bs:
+        tmp = SumAttr(title=t, time=s[t], brief_time=bs[t])
+        print(tmp.title, tmp.time, tmp.brief_time)
+        tmp.save()
 
 def video():
     d = defaultdict(lambda: defaultdict(list))

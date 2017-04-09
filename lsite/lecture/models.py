@@ -15,6 +15,11 @@ class Slide(models.Model):
     video_title = models.CharField(max_length=256)
     title = models.CharField(max_length=256)
 
+class SumAttr(models.Model):
+    title = models.CharField(max_length=256)
+    time = models.CharField(max_length=256)
+    brief_time = models.CharField(max_length=256)
+
 class VideoAttr(models.Model):
     title = models.CharField(max_length=256)
     prev_ch = models.DecimalField(max_digits=10, decimal_places=0)
