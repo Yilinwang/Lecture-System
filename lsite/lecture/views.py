@@ -65,13 +65,19 @@ def search(request):
         return render(request, 'lecture/index.html', {'slide_list': slide_list})
 
 def subchapter(request, slide):
-    pass
+    slide_list = mk_slide_list()
+    title_text = SumPageTitle.objects.filter(title=slide)[0].title_text
+    video_attr = getvideoattr(slide+'-1')
+    keyterms, keyterm_attr = getkeyterm(slide)
+    index = slide.split('-')
+    return render(request, 'lecture/subchapter.html', {'slide_list': slide_list, 'ch': int(index[0]), 'subch': int(index[1]), 'title': index[0]+'.'+index[1], 'keyterms': keyterms, 'keyterm_attr': keyterm_attr, 'v': video_attr, 'title_text': title_text, 'slide': slide} )
 
 def chapter(request, slide):
     slide_list = mk_slide_list()
-    title_text = SumPageTitle.objects.filter(title=slide)[0]
+    title_text = SumPageTitle.objects.filter(title=slide)[0].title_text
     video_attr = getvideoattr(slide+'-1-1')
-    #return render(request, 'lecture/course.html', {'slide_list': slide_list, 'ch': int(slide.strip()), 'title': 
+    keyterms, keyterm_attr = getkeyterm(slide)
+    return render(request, 'lecture/chapter.html', {'slide_list': slide_list, 'ch': int(slide), 'title': slide, 'keyterms': keyterms, 'keyterm_attr': keyterm_attr, 'v': video_attr, 'title_text': title_text} )
 
 def content(request, slide):
     slide_list = mk_slide_list()

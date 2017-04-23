@@ -23,21 +23,23 @@
       .bg-gray {
         background-color: #eeeeee;
       } 
+      body {
+        padding-top: 80px;
+      }
     </style>
   </head>
 
   <body>
-
-    <nav class="navbar navbar-fixed-top navbar-toggleable-md navbar-light bg-faded" style="background-color: #fff; margin: 10px;">
-      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+    <nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
+      <button class="navbar-toggler navbar-toggler-right hidden-lg-up" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <a class="navbar-brand" href="/lecture/"><h2><font face="serif"><b>NTU Virtual Instructor 台大虛擬教師</b></font></h2></a>
+      <a class="navbar-brand" href="/lecture/"><h2><font face="serif">NTU Virtual Instructor 台大虛擬教師</font></h2></a>
 
-      <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-        <ul class="navbar-nav mr-auto mt-2 mt-md-0"> </ul>
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto"> </ul>
         <form class="form-inline my-2 my-lg-0" action="/lecture/search/" method="get">
-          <input class="form-control mr-sm-2" type="text" name="q" placeholder="{{q}}">
+          <input class="form-control mr-sm-2" type="text" name="q" placeholder="Search by Speech">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
       </div>
@@ -54,17 +56,25 @@
           <div class="d-flex w-100 justify-content-between">
             <div>
               <a href="/lecture/{{title}}/" class="align-self-center"><h5>{{title}}</h5></a>
+
               <p>(transcription:)<br>
               Key terms related to this slide:</p>
 
             </div>
+
             <div class="align-self-center">
-              <button class="btn btn-info">summary<br>(time)</button>
+
               {% load static %}
+              <a href="{% static "lecture/videos/whole/" %}{{title}}.mp4#t=3,5" data-toggle="lightbox" data-type="video" data-width="1280">
+                <button class="btn btn-primary">whole lecture<br>({{video_time|vtime:title}})</button>
+              </a>
+
+              <button class="btn btn-info">summary<br>(time)</button>
               <a href="{% static "lecture/videos/" %}{{title}}.mp4" data-toggle="lightbox" data-type="video" data-width="1280">
                 <button class="btn btn-primary">whole lecture<br>({{video_time|vtime:title}})</button>
               </a>
             </div>
+
           </div>
         </div>
         {% endfor %}

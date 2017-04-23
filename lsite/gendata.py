@@ -118,6 +118,9 @@ def import_keyterm():
         for line in fp:
             k = line.strip().split(' ')
             if len(k) > 1:
+                tmp = k[0].split('-')
+                addkeyterm(tmp[0], k[1:])
+                addkeyterm('%s-%s' % (tmp[0], tmp[1]), k[1:])
                 addkeyterm(k[0], k[1:])
 
 def import_keyterm_graph():
@@ -181,10 +184,9 @@ def addSumPageTitle():
     saveSumPageTitle('10-3', 'System Characterization with Z-Transform')
     saveSumPageTitle('10-4', 'Unilateral Z-Transform')
 
-    
-
-
 def main():
+    #Slidekeyterm.objects.all().delete()
+    #import_keyterm()
     pass
 
 if __name__ == '__main__':
