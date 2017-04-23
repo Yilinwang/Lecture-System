@@ -15,6 +15,10 @@ class Slide(models.Model):
     video_title = models.CharField(max_length=256)
     title = models.CharField(max_length=256)
 
+class SumPageTitle(models.Model):
+    title = models.CharField(max_length=256)
+    title_text = models.CharField(max_length=256)
+
 class SumAttr(models.Model):
     title = models.CharField(max_length=256)
     time = models.CharField(max_length=256)

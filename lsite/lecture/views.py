@@ -8,6 +8,7 @@ from .models import Slide
 from .models import KeytermRelation
 from .models import VideoAttr
 from .models import SumAttr
+from .models import SumPageTitle
 
 from collections import defaultdict
 from subprocess import Popen, PIPE
@@ -63,6 +64,15 @@ def search(request):
         slide_list = mk_slide_list()
         return render(request, 'lecture/index.html', {'slide_list': slide_list})
 
+def subchapter(request, slide):
+    pass
+
+def chapter(request, slide):
+    slide_list = mk_slide_list()
+    title_text = SumPageTitle.objects.filter(title=slide)[0]
+    video_attr = getvideoattr(slide+'-1-1')
+    #return render(request, 'lecture/course.html', {'slide_list': slide_list, 'ch': int(slide.strip()), 'title': 
+
 def content(request, slide):
     slide_list = mk_slide_list()
     keyterms, keyterm_attr = getkeyterm(slide)
@@ -70,4 +80,4 @@ def content(request, slide):
     index = slide.split('-')
     title_text = Slide.objects.filter(chapter=int(index[0])).filter(subchapter=int(index[1])).filter(page=int(index[2]))[0].title
     summary_attr = getsummaryattr(slide)
-    return render(request, 'lecture/course.html', {'slide_list': slide_list, 'ch': int(index[0]), 'title': index[1]+'-'+index[2], 'subch': int(index[1]), 'keyterms': keyterms, 'keyterm_attr': keyterm_attr, 'v': video_attr, 'title_text': title_text, 'summary_attr': summary_attr})
+    return render(request, 'lecture/course.html', {'slide_list': slide_list, 'ch': int(index[0]), 'title': index[1]+'-'+index[2], 'subch': int(index[1]), 'page': int(index[2]), 'keyterms': keyterms, 'keyterm_attr': keyterm_attr, 'v': video_attr, 'title_text': title_text, 'summary_attr': summary_attr})

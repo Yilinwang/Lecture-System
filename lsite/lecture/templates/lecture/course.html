@@ -2,43 +2,80 @@
 
   <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.1.1/ekko-lightbox.min.css" integrity="sha256-8aNQFtmxcOMVoOhLD4mrHqaKC2Ui++LmlQsoKTqxwIE=" crossorigin="anonymous" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.1.1/ekko-lightbox.min.js" integrity="sha256-1odJPEl+KoMUaA1T7QNMGSSU/r5LCKCRC6SL8P0r2gY=" crossorigin="anonymous"></script>
     <script>
-        $(function () {
-            $('[data-trigger="hover"]').popover({html: true, placement: "left"})
-        })
-        $(document).on('click', '[data-toggle="lightbox"]', function(event) {
-            event.preventDefault();
-            $(this).ekkoLightbox();
-        });
-        $('#myModal').on('shown.bs.modal', function () {
-            $('#myInput').focus()
-        })
+      $(function () {
+        $('[data-trigger="hover"]').popover({html: true, placement: "left"})
+      })
+      $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+        event.preventDefault();
+        $(this).ekkoLightbox();
+      });
+      $('#myModal').on('shown.bs.modal', function () {
+        $('#myInput').focus()
+      })
+      var curposition = document.getElementById("side-bar");
     </script>
     <style>
+body {
+  padding-top: 80px;
+}
       .bg-gray {
         background-color: #eeeeee;
       } 
       ul {
         list-style-type: none;
       }
+      .sidebar {
+        position: fixed;
+        top: 51px;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        padding: 20px;
+        overflow-x: hidden;
+        overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+        border-right: 1px solid #eee;
+      }
+
+      /* Sidebar navigation */
+      .sidebar {
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      .sidebar .nav {
+        margin-bottom: 20px;
+      }
+
+      .sidebar .nav-item {
+        width: 100%;
+      }
+
+      .sidebar .nav-item + .nav-item {
+        margin-left: 0;
+      }
+
+      .sidebar .nav-link {
+        border-radius: 0;
+      }
     </style>
   </head>
 
   <body>
-
-    <nav class="navbar navbar-fixed-top navbar-toggleable-md navbar-light bg-faded" style="background-color: #ffffff; margin: 10px;">
-      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+    <nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
+      <button class="navbar-toggler navbar-toggler-right hidden-lg-up" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <a class="navbar-brand" href="/lecture/"><h2>NTU Virtual Instructor</h2></a>
+      <a class="navbar-brand" href="/lecture/"><h2><font face="serif">NTU Virtual Instructor 台大虛擬教師</font></h2></a>
 
-      <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-        <ul class="navbar-nav mr-auto mt-2 mt-md-0"> </ul>
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto"> </ul>
         <form class="form-inline my-2 my-lg-0" action="/lecture/search/" method="get">
           <input class="form-control mr-sm-2" type="text" name="q" placeholder="Search by Speech">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
@@ -46,89 +83,95 @@
       </div>
     </nav>
 
-    <div class="row">
-      <div class="col-md-2" id="side-bar" style="height: 600px; text-align:center; overflow-y: scroll">
-        <div class="panel-group">
-          <div class="panel panel-default">
+    <div class="container-fluid">
+      <div class="row">
+
+        <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar" id="course">
+          <ul class="nav nav-pills flex-column">
             {% for c, l in slide_list.items %}
-            <div class="panel-heading">
-              <h5 class="panel-title">
-                <a data-toggle="collapse" href="#collapse{{c}}">Chapter {{c}}</a>
-              </h5>
-            </div>
-            {% if c == ch %}
-            <div id="collapse{{c}}" class="panel-collapse collapse show">
-            {% else %}
-            <div id="collapse{{c}}" class="panel-collapse collapse">
-            {% endif %}
-              <ul class="list-group">
-                {% for sc, ll in l.items %}
-                <li class="list-group-title"><a data-toggle="collapse" href="#collapse{{c}}{{sc}}{{sc}}">{{c}}.{{sc}}</a></li>
-                {% if subch == sc and c == ch %}
-                <div id="collapse{{c}}{{sc}}{{sc}}" class="panel-collapse collapse show">
+            <li class="nav-item">
+              <a class="nav-link" href="/lecture/{{c}}"><h5><b>Chapter {{c}}</b></h5></a>
+              {% if c == ch %}
+              <div id="collapse{{c}}" class="panel-collapse collapse show">
                 {% else %}
-                <div id="collapse{{c}}{{sc}}{{sc}}" class="panel-collapse collapse">
+              <div id="collapse{{c}}" class="panel-collapse collapse">
                 {% endif %}
-                        {% for i in ll %}
-                        <li class="list-group-tiem"><a href="/lecture/{{c}}-{{sc}}-{{i}}">{{c}}.{{sc}}-{{i}}</a></li>
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-              </ul>
-            </div>
+                <ul>
+                  {% for sc, ll in l.items %}
+                  <a class="nav-link" href="/lecture/{{c}}-{{sc}}"><b>{{c}}.{{sc}}</b></a>
+                  {% if subch == sc and c == ch %}
+                  <div id="collapse{{c}}{{sc}}{{sc}}" class="panel-collapse collapse show">
+                    {% else %}
+                  <div id="collapse{{c}}{{sc}}{{sc}}" class="panel-collapse collapse">
+                    {% endif %}
+                    <ul>
+                      {% for i in ll %}
+                      {% if c == ch and sc == subch and i == page %}
+                      <a class="nav-link active" href="/lecture/{{c}}-{{sc}}-{{i}}" id="active">{{c}}.{{sc}}-{{i}}</a>
+                      {% else %}
+                      <a class="nav-link" href="/lecture/{{c}}-{{sc}}-{{i}}">{{c}}.{{sc}}-{{i}}</a>
+                      {% endif %}
+                      {% endfor %}
+                    </ul>
+                  </div>
+                  {% endfor %}
+                </ul>
+              </div>
+            </li>
             {% endfor %}
-          </div>
-        </div>
-      </div>
+          </ul>
+        </nav>
+        <div class="col-md-2"></div>
 
-      <div class="col-md-7" style="text-align: center;">
-        {% load functions %}
-        <div style="text-align: left;">
-          <h4>{{ch}}.{{title}} <font face="serif"><u><b>{{title_text}}</b></u></font></h4>
-          {% if v != None %}
-          <h6>time span of this chapter:</h6>
-          <div class="progress" style="margin: 5px;">
-            <div class="progress-bar bg-gray" role="progressbar" style="width: {{v.prev_ch}}%;" aria-valuenow="{{v.prev_ch}}" aria-valuemin="0" aria-valuemax="100"></div>
-            <div class="progress-bar bg-success" role="progressbar" style="width: {{v.cur_ch}}%;" aria-valuenow="{{v.cur_ch}}" aria-valuemin="0" aria-valuemax="100">{{v.ch_time}}</div>
-          </div>
-          <h6>time span of this subchapter:</h6>
-          <div class="progress" style="margin: 5px">
-            <div class="progress-bar bg-gray" role="progressbar" style="width: {{v.prev_subch}}%;" aria-valuenow="{{v.prev_subch}}" aria-valuemin="0" aria-valuemax="100"></div>
-            <div class="progress-bar bg-success" role="progressbar" style="width: {{v.cur_subch}}%;" aria-valuenow="{{v.cur_subch}}" aria-valuemin="0" aria-valuemax="100">{{v.subch_time}}</div>
-          </div>
-          <h6>time span of this slide:</h6>
-          <div class="progress" style="margin: 5px">
-            <div class="progress-bar bg-gray" role="progressbar" style="width: {{v.prev}}%;" aria-valuenow="{{v.prev}}" aria-valuemin="0" aria-valuemax="100"></div>
-            <div class="progress-bar bg-success" role="progressbar" style="width: {{v.cur}}%;" aria-valuenow="{{v.cur}}" aria-valuemin="0" aria-valuemax="100">00:{{v.time}}</div>
-          </div>
-        </div>
-        {% load static %}
-        <img src="{% static "lecture/slides/" %}{{ch}}/{{title}}.jpg" style="width: 550px"><br><br>
-      </div>
 
-      <div class="col-md-3" id="scroll" style="height: 600px;text-align: center; overflow-y: scroll;">
-        <div style="margin: 5px;">
-          {% load static %}
-          <a href="{% static "lecture/videos/brief_summary/" %}{{ch}}-{{title}}.mp4" data-toggle="lightbox" data-type="video" data-width="1280">
-            <button class="btn btn-info">brief summary<br>(00:{{summary_attr.brief_time}})</button>
-          </a>
-          <a href="{% static "lecture/videos/summary/" %}{{ch}}-{{title}}.mp4" data-toggle="lightbox" data-type="video" data-width="1280">
-            <button class="btn btn-info">summary<br>(00:{{summary_attr.time}})</button>
-          </a>
-        </div>
-        <a href="{% static "lecture/videos/whole/" %}{{ch}}-{{title}}.mp4" data-toggle="lightbox" data-type="video" data-width="1280">
-          <button class="btn btn-primary">whole lecture<br>(00:{{v.time}})</button>
-        </a>
-        <div style="margin: 15px;"> <h3 style="color: red;">Key Terms:</h3></div>
-        <div id="keyterms" role="tablist" aria-multiselectable="true" style="margin: 15px;">
-          <div class="card">
-            {% for key, relations in keyterms.items %}
-            <div class="card-header" role="tab">
-              <a class="collapsed" data-toggle="collapse" href="#{{key}}" aria-expanded="false" aria-controls="{{key}}" data-trigger="hover" data-content="key term appearing in this slide">{{key}}</a>
+        <div class="col-md-7" style="text-align: center; overflow-y: hidden;">
+          {% load functions %}
+          <div style="text-align: left;">
+            <h4>{{ch}}.{{title}} <font face="serif"><u><b>{{title_text}}</b></u></font></h4>
+            {% if v != None %}
+            <h6>time span of this chapter in the course:</h6>
+            <div class="progress" style="margin: 5px;">
+              <div class="progress-bar bg-gray" role="progressbar" style="width: {{v.prev_ch}}%;" aria-valuenow="{{v.prev_ch}}" aria-valuemin="0" aria-valuemax="100"></div>
+              <div class="progress-bar bg-success" role="progressbar" style="width: {{v.cur_ch}}%;" aria-valuenow="{{v.cur_ch}}" aria-valuemin="0" aria-valuemax="100">{{v.ch_time}}</div>
             </div>
-            <div id="{{key}}" class="collapse" role="tabpanel">
-              <div class="card-block">
-                <a href="#" data-toggle="modal" data-target="#t{{key}}" data-trigger="hover" data-content="key term appearing in this slide">{{key}}</a><br>
+            <h6>time span of this subchapter in the chapter:</h6>
+            <div class="progress" style="margin: 5px">
+              <div class="progress-bar bg-gray" role="progressbar" style="width: {{v.prev_subch}}%;" aria-valuenow="{{v.prev_subch}}" aria-valuemin="0" aria-valuemax="100"></div>
+              <div class="progress-bar bg-success" role="progressbar" style="width: {{v.cur_subch}}%;" aria-valuenow="{{v.cur_subch}}" aria-valuemin="0" aria-valuemax="100">{{v.subch_time}}</div>
+            </div>
+            <h6>time span of this slide in the subchapter:</h6>
+            <div class="progress" style="margin: 5px">
+              <div class="progress-bar bg-gray" role="progressbar" style="width: {{v.prev}}%;" aria-valuenow="{{v.prev}}" aria-valuemin="0" aria-valuemax="100"></div>
+              <div class="progress-bar bg-success" role="progressbar" style="width: {{v.cur}}%;" aria-valuenow="{{v.cur}}" aria-valuemin="0" aria-valuemax="100">00:{{v.time}}</div>
+            </div>
+          </div>
+          {% load static %}
+          <img src="{% static "lecture/slides/" %}{{ch}}/{{title}}.jpg" style="width: 550px"><br><br>
+        </div>
+
+
+        <div class="col-md-3" style="height: 100%; text-align: center; overflow-y: scroll;">
+          <div style="margin: 5px;">
+            {% load static %}
+            <a href="{% static "lecture/videos/brief_summary/" %}{{ch}}-{{title}}.mp4" data-toggle="lightbox" data-type="video" data-width="1280">
+              <button class="btn btn-info">summary 1:<br>brief<br>(00:{{summary_attr.brief_time}})</button>
+            </a>
+            <a href="{% static "lecture/videos/summary/" %}{{ch}}-{{title}}.mp4" data-toggle="lightbox" data-type="video" data-width="1280">
+              <button class="btn btn-info">summary 2:<br>more content<br>(00:{{summary_attr.time}})</button>
+            </a>
+          </div>
+          <a href="{% static "lecture/videos/whole/" %}{{ch}}-{{title}}.mp4" data-toggle="lightbox" data-type="video" data-width="1280">
+            <button class="btn btn-primary">whole lecture<br>(00:{{v.time}})</button>
+          </a>
+          <div class="row">
+            <div class="col-md-8"><div style="margin: 15px;"><h3 style="color: red;">Key Terms:</h3></div></div> related<br>keyterms:
+          </div>
+          <div id="keyterms" role="tablist" aria-multiselectable="true" style="margin: 15px;">
+            <div class="card">
+              {% for key, relations in keyterms.items %}
+              <div class="card-header" role="tab">
+                <a href="#" data-toggle="modal" data-target="#t{{key}}" data-trigger="hover" data-content="key term appearing in this slide">{{key}}</a>
+                <a class="collapsed" data-toggle="collapse" href="#rel{{key}}" aria-expanded="false" aria-controls="{{key}}" data-trigger="hover" data-content="key term related to {{key}}"><i class="material-icons">expand_more</i></a>
                 <div class="modal fade" id="t{{key}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -144,55 +187,64 @@
                         <p><a href="/lecture/{{x.0}}"> {{x.1}}</a></p>
                         {% endfor %}
                         <h6>Also appears in slides: </h6>
-                        <p>
-                        {% for x in keyterm_attr|getrelated:key %}
-                        <a href="/lecture/{{x.0}}">{{x.1}}</a>
-                        {% endfor %}
-                        </p>
+                        <div class="row">
+                          {% for x in keyterm_attr|getrelated:key %}
+                          <div class="col-md-3"><a href="/lecture/{{x.0}}">{{x.1}}</a><br></div>
+                          {% endfor %}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                related keyterms:<br>
-                {% for relation in relations %}
-                <a href="#" data-toggle="modal" data-target="#{{key}}{{relation.k2}}" data-trigger="hover" data-content="key term not appearing in this slide but related to {{key}}">{{relation.k2}}</a><br>
-                <div class="modal fade" id="{{key}}{{relation.k2}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                  <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">{{relation.k2}}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body" style="text-align: left;">
-                        <h6>This key term first appears in slide:</h6>
-                        {% for x in keyterm_attr|getfirst:relation.k2 %}
-                        <p><a href="/lecture/{{x.0}}"> {{x.1}}</a></p>
-                        {% endfor %}
-                        <h6>Also appears in slides: </h6>
-                        <p>
-                        {% for x in keyterm_attr|getrelated:relation.k2 %}
-                        <a href="/lecture/{{x.0}}">{{x.1}}</a>
-                        {% endfor %}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {% endfor %}
               </div>
+              <div id="rel{{key}}" class="collapse" role="tabpanel">
+                <div class="card-block">
+                  related keyterms:<br>
+                  {% for relation in relations %}
+                  <a href="#" data-toggle="modal" data-target="#{{key}}{{relation.k2}}" data-trigger="hover" data-content="key term not appearing in this slide but related to {{key}}">{{relation.k2}}</a><br>
+                  <div class="modal fade" id="{{key}}{{relation.k2}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLongTitle">{{relation.k2}}</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body" style="text-align: left;">
+                          <h6>This key term first appears in slide:</h6>
+                          {% for x in keyterm_attr|getfirst:relation.k2 %}
+                          <p><a href="/lecture/{{x.0}}"> {{x.1}}</a></p>
+                          {% endfor %}
+                          <h6>Also appears in slides: </h6>
+                          <div class="row">
+                            {% for x in keyterm_attr|getrelated:relation.k2 %}
+                            <div class="col-md-3"><a href="/lecture/{{x.0}}">{{x.1}}</a><br></div>
+                            {% endfor %}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+              {% endfor %}
             </div>
-            {% endfor %}
           </div>
+          {% else %}
+          there is no video for this slide
+          {% load static %}
+          <img src="{% static "lecture/slides/" %}{{ch}}/{{title}}.jpg" style="width: 550px"><br><br>
+          {% endif %}
         </div>
-        {% else %}
-        there is no video for this slide
-        {% load static %}
-        <img src="{% static "lecture/slides/" %}{{ch}}/{{title}}.jpg" style="width: 550px"><br><br>
-        {% endif %}
       </div>
     </div>
 
   </body>
+  <script>
+    if($("#active").offset().top-80 > $(window).height()-150) {
+      $("#course").scrollTop($("#active").offset().top-80);
+    }
+  </script>
 </html>

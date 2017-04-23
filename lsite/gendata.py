@@ -11,12 +11,15 @@ from lecture.models import Slidekeyterm
 from lecture.models import KeytermRelation
 from lecture.models import VideoAttr
 from lecture.models import SumAttr
+from lecture.models import SumPageTitle
 
 from glob import glob
 import pptx
 
 def clean():
-    Slide.objects.all().delete()
+    #Slide.objects.all().delete()
+    KeytermRelation.objects.all().delete()
+    #Slidekeyterm.objects.all().delete()
 
 def init(num):
     for x in glob('./lecture/static/lecture/slides/'+num+'/*'):
@@ -27,14 +30,16 @@ def init(num):
         tmp.save()
 
 def addkeyterm(t, k):
-    tmp = Slidekeyterm(title=t, keyterm=k)
-    tmp.save()
+    print(t, k)
+    for x in k:
+        tmp = Slidekeyterm(title=t, keyterm=x)
+        tmp.save()
 
 def addrelation(a, b):
     tmp = KeytermRelation(k1=a, k2=b)
     tmp.save()
-    tmp = KeytermRelation(k1=b, k2=a)
-    tmp.save()
+    #tmp = KeytermRelation(k1=b, k2=a)
+    #tmp.save()
 
 def percentage(a):
     if a == 0:
@@ -45,15 +50,15 @@ def percentage(a):
 def sumvideo():
     s = defaultdict(lambda: defaultdict(list))
     bs = defaultdict(lambda: defaultdict(list))
-    for x in glob('lecture/static/lecture/videos/brief_summary/*.mp4'):
-        title = x.split('/')[-1].split('.')[0]
-        time = subprocess.run(['ffprobe', x], stderr=subprocess.PIPE).stderr.strip().split(b'Duration: ')[1].split(b',')[0].split(b'.')[0].split(b':', 1)[1].decode('ascii')
-        s[title] = time
     for x in glob('lecture/static/lecture/videos/summary/*.mp4'):
         title = x.split('/')[-1].split('.')[0]
         time = subprocess.run(['ffprobe', x], stderr=subprocess.PIPE).stderr.strip().split(b'Duration: ')[1].split(b',')[0].split(b'.')[0].split(b':', 1)[1].decode('ascii')
+        s[title] = time
+    for x in glob('lecture/static/lecture/videos/brief_summary/*.mp4'):
+        title = x.split('/')[-1].split('.')[0]
+        time = subprocess.run(['ffprobe', x], stderr=subprocess.PIPE).stderr.strip().split(b'Duration: ')[1].split(b',')[0].split(b'.')[0].split(b':', 1)[1].decode('ascii')
         bs[title] = time
-    for t in bs:
+    for t in s:
         tmp = SumAttr(title=t, time=s[t], brief_time=bs[t])
         print(tmp.title, tmp.time, tmp.brief_time)
         tmp.save()
@@ -107,6 +112,77 @@ def text_title():
         l[i].save()
         i += 1
     print(len(l), len(p.slides))
+
+def import_keyterm():
+    with open('keyterm.txt') as fp:
+        for line in fp:
+            k = line.strip().split(' ')
+            if len(k) > 1:
+                addkeyterm(k[0], k[1:])
+
+def import_keyterm_graph():
+    with open('keyterm_graph.txt') as fp:
+        cur = ''
+        for line in fp:
+            if '\t' not in line and line != '\n':
+                cur = line.strip()
+            elif '\t' in line:
+                print(cur, line.strip())
+                addrelation(cur, line.strip())
+
+def saveSumPageTitle(t, tt):
+    tmp = SumPageTitle(title=t, title_text=tt)
+    tmp.save()
+
+def addSumPageTitle():
+    saveSumPageTitle('2', 'Linear Time-invariant Systems')
+    saveSumPageTitle('2-1', 'Discrete-time Systems: the Convolution Sum')
+    saveSumPageTitle('2-2', 'Vector Space Interpretation for Discrete-time Systems')
+    saveSumPageTitle('2-3', 'Continuous-time System : the Convolution Integral')
+    saveSumPageTitle('2-4', 'Properties of Linear Time-invariant Systems')
+    saveSumPageTitle('2-5', 'Systems Described by Differential/Difference Equations')
+    saveSumPageTitle('2-6', 'The Unit Impulse for Continuous-time Cases')
+    saveSumPageTitle('2-7', 'Vector Space Interpretation for Continuous-time Systems')
+    saveSumPageTitle('3', 'Fourier Series Representation of Periodic Signals')
+    saveSumPageTitle('3-1', 'Exponential/Sinusoidal Signals as Building Blocks for Many Signals')
+    saveSumPageTitle('3-2', 'Fourier Series Representation of Continuous-time Periodic Signals')
+    saveSumPageTitle('3-3', 'Properties of Fourier Series')
+    saveSumPageTitle('3-4', 'Fourier Series Representation of Discrete-time Periodic Signals')
+    saveSumPageTitle('3-5', 'Application Example')
+    saveSumPageTitle('4', 'Continuous-time Fourier Transform')
+    saveSumPageTitle('4-1', 'From Fourier Series to Fourier Transform')
+    saveSumPageTitle('4-2', 'Properties of Continuous-time Fourier Transform')
+    saveSumPageTitle('5', 'Discrete-time Fourier Transform')
+    saveSumPageTitle('5-1', 'Discrete-time Fourier Transform Representation for discrete-time signals')
+    saveSumPageTitle('5-2', 'Properties of Discrete-time Fourier Transform')
+    saveSumPageTitle('5-3', 'Summary and Duality')
+    saveSumPageTitle('6', 'Time/Frequency Characterization of Signals/Systems')
+    saveSumPageTitle('6-1', 'Magnitude and Phase for Signals and Systems')
+    saveSumPageTitle('6-2', 'Filtering')
+    saveSumPageTitle('6-3', 'First/Second-Order Systems Described by Differential/Difference Equations')
+    saveSumPageTitle('7', 'Sampling')
+    saveSumPageTitle('7-1', 'The Sampling Theorem')
+    saveSumPageTitle('7-2', 'Discrete-time Processing of Continuous-time Signals')
+    saveSumPageTitle('7-3', 'Change of Sampling Frequency')
+    saveSumPageTitle('8', 'Communication Systems')
+    saveSumPageTitle('8-0', 'Communication Systems')
+    saveSumPageTitle('8-1', 'Amplitude Modulation (AM) and Frequency-Division Multiplexing (FDM)')
+    saveSumPageTitle('8-2', 'Pulse Modulation and Time-Division Multiplexing')
+    saveSumPageTitle('8-3', 'Angle/Frequency Modulation')
+    saveSumPageTitle('8-4', 'Discrete-time Modulation')
+    saveSumPageTitle('9', 'Laplace Transform')
+    saveSumPageTitle('9-1', 'General Principles of Laplace Transform')
+    saveSumPageTitle('9-2', 'Properties of Laplace Transform')
+    saveSumPageTitle('9-3', 'System Characterization with Laplace Transform')
+    saveSumPageTitle('9-4', 'Unilateral Laplace Transform')
+    saveSumPageTitle('10', 'Z-Transform')
+    saveSumPageTitle('10-1', 'General Principles of Z-Transform')
+    saveSumPageTitle('10-2', 'Properties of Z-Transform')
+    saveSumPageTitle('10-3', 'System Characterization with Z-Transform')
+    saveSumPageTitle('10-4', 'Unilateral Z-Transform')
+
+    
+
 
 def main():
     pass
