@@ -10,6 +10,7 @@ from lecture.models import Slide
 from lecture.models import Slidekeyterm
 from lecture.models import KeytermRelation
 from lecture.models import VideoAttr
+from lecture.models import ChapVideoAttr
 from lecture.models import SumAttr
 from lecture.models import SumPageTitle
 
@@ -61,6 +62,19 @@ def sumvideo():
     for t in s:
         tmp = SumAttr(title=t, time=s[t], brief_time=bs[t])
         print(tmp.title, tmp.time, tmp.brief_time)
+        tmp.save()
+
+def chapvideo():
+    print('hi')
+    prev = './lecture/static/lecture/videos/'
+    for x in glob('./lecture/static/lecture/videos/chapter3/*'):
+        title = x.strip().split('/')[-1]
+        title_text = title[:-4]
+        print(title_text)
+        chapter3 = subprocess.run(['ffprobe', x], stderr=subprocess.PIPE).stderr.strip().split(b'Duration: ')[1].split(b',')[0].split(b'.')[0].decode('ascii')
+        chapter10 = subprocess.run(['ffprobe', prev+'/chapter10/'+title], stderr=subprocess.PIPE).stderr.strip().split(b'Duration: ')[1].split(b',')[0].split(b'.')[0].decode('ascii')
+        time = subprocess.run(['ffprobe', prev+'/whole/'+title], stderr=subprocess.PIPE).stderr.strip().split(b'Duration: ')[1].split(b',')[0].split(b'.')[0].decode('ascii')
+        tmp = ChapVideoAttr(title=title_text, time=time, chapter3time=chapter3, chapter10time=chapter10)
         tmp.save()
 
 def video():
@@ -187,6 +201,7 @@ def addSumPageTitle():
 def main():
     #Slidekeyterm.objects.all().delete()
     #import_keyterm()
+    #chapvideo()
     pass
 
 if __name__ == '__main__':

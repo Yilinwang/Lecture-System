@@ -90,10 +90,11 @@ body {
           <ul class="nav nav-pills flex-column">
             {% for c, l in slide_list.items %}
             <li class="nav-item">
-              <a class="nav-link" href="/lecture/{{c}}"><h5><b>Chapter {{c}}</b></h5></a>
               {% if c == ch %}
+              <a class="nav-link active" href="/lecture/{{c}}" id="active"><h5><b>Chapter {{c}}</b></h5></a>
               <div id="collapse{{c}}" class="panel-collapse collapse show">
                 {% else %}
+              <a class="nav-link" href="/lecture/{{c}}"><h5><b>Chapter {{c}}</b></h5></a>
               <div id="collapse{{c}}" class="panel-collapse collapse">
                 {% endif %}
                 <ul>
@@ -143,15 +144,15 @@ body {
         <div class="col-md-3" style="height: 100%; text-align: center; overflow-y: scroll;">
           <div style="margin: 5px;">
             {% load static %}
-            <a href="{% static "lecture/videos/brief_summary/" %}{{ch}}-{{title}}.mp4" data-toggle="lightbox" data-type="video" data-width="1280">
-              <button class="btn btn-info">summary 1:<br>brief<br>(00:{{summary_attr.brief_time}})</button>
+            <a href="{% static "lecture/videos/chapter3/" %}{{title}}.mp4" data-toggle="lightbox" data-type="video" data-width="1280">
+              <button class="btn btn-info">summary 1:<br>brief<br>({{chv_attr.chapter3time}})</button>
             </a>
-            <a href="{% static "lecture/videos/summary/" %}{{ch}}-{{title}}.mp4" data-toggle="lightbox" data-type="video" data-width="1280">
-              <button class="btn btn-info">summary 2:<br>more content<br>(00:{{summary_attr.time}})</button>
+            <a href="{% static "lecture/videos/chapter10/" %}{{title}}.mp4" data-toggle="lightbox" data-type="video" data-width="1280">
+              <button class="btn btn-info">summary 2:<br>more content<br>({{chv_attr.chapter10time}})</button>
             </a>
           </div>
-          <a href="{% static "lecture/videos/whole/" %}{{ch}}-{{title}}.mp4" data-toggle="lightbox" data-type="video" data-width="1280">
-            <button class="btn btn-primary">whole lecture<br>(00:{{v.time}})</button>
+          <a href="{% static "lecture/videos/whole/" %}{{title}}.mp4" data-toggle="lightbox" data-type="video" data-width="1280">
+            <button class="btn btn-primary">whole lecture<br>({{chv_attr.time}})</button>
           </a>
           <div class="row">
             <div class="col-md-8"><div style="margin: 15px;"><h3 style="color: red;">Key Terms:</h3></div></div> related<br>keyterms:

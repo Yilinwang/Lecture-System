@@ -24,6 +24,12 @@ class SumAttr(models.Model):
     time = models.CharField(max_length=256)
     brief_time = models.CharField(max_length=256)
 
+class ChapVideoAttr(models.Model):
+    title = models.CharField(max_length=256)
+    time = models.CharField(max_length=256)
+    chapter3time = models.CharField(max_length=256)
+    chapter10time = models.CharField(max_length=256)
+
 class VideoAttr(models.Model):
     title = models.CharField(max_length=256)
     prev_ch = models.DecimalField(max_digits=10, decimal_places=0)

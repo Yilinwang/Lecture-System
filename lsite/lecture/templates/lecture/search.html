@@ -8,21 +8,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.1.1/ekko-lightbox.min.css" integrity="sha256-8aNQFtmxcOMVoOhLD4mrHqaKC2Ui++LmlQsoKTqxwIE=" crossorigin="anonymous" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.1.1/ekko-lightbox.min.js" integrity="sha256-1odJPEl+KoMUaA1T7QNMGSSU/r5LCKCRC6SL8P0r2gY=" crossorigin="anonymous"></script>
     <script>
-        $(function () {
-            $('[data-trigger="hover"]').popover({html: true, placement: "left"})
-        })
-        $(document).on('click', '[data-toggle="lightbox"]', function(event) {
-            event.preventDefault();
-            $(this).ekkoLightbox();
-        });
-        $('#myModal').on('shown.bs.modal', function () {
-            $('#myInput').focus()
-        })
+$(function () {
+  $('[data-trigger="hover"]').popover({html: true, placement: "left"})
+})
+$(document).on('click', '[data-toggle="lightbox"]', function(event) {
+  event.preventDefault();
+  $(this).ekkoLightbox();
+});
+$('#myModal').on('shown.bs.modal', function () {
+  $('#myInput').focus()
+})
     </script>
     <style>
-      .bg-gray {
-        background-color: #eeeeee;
-      } 
+.bg-gray {
+  background-color: #eeeeee;
+} 
       body {
         padding-top: 80px;
       }
@@ -46,32 +46,29 @@
     </nav>
 
     <div style="margin-left: 20px; margin-right: 30px;">
-      <h4 style="color: #a9a9a9;">About {{num}} Results for Term "{{q}}"</h4>
-       
+      <h4 style="color: #a9a9a9;">A total of {{num}} retrieved items for the query "{{q}}"</h4>
+
       <div class="list-group ">
-        
+
         {% load functions %}
-        {% for title in result %}
+        {% for x in result %}
         <div class="list-group-item flex-column">
           <div class="d-flex w-100 justify-content-between">
             <div>
-              <a href="/lecture/{{title}}/" class="align-self-center"><h5>{{title}}</h5></a>
-
-              <p>(transcription:)<br>
-              Key terms related to this slide:</p>
-
+              <a href="/lecture/{{x.0}}/" class="align-self-center"><h5>{{x.0}}</h5></a>
+              <p>(transcription: {{x.3}})<br>
+              Key terms related to this slide: 
+              {% for k in x.5 %}
+              <a href="#" data-toggle="modal" data-target="#t{{k}}">{{k}}</a>,
+              {% endfor %}
+              </p>
             </div>
 
             <div class="align-self-center">
 
               {% load static %}
-              <a href="{% static "lecture/videos/whole/" %}{{title}}.mp4#t=3,5" data-toggle="lightbox" data-type="video" data-width="1280">
-                <button class="btn btn-primary">whole lecture<br>({{video_time|vtime:title}})</button>
-              </a>
-
-              <button class="btn btn-info">summary<br>(time)</button>
-              <a href="{% static "lecture/videos/" %}{{title}}.mp4" data-toggle="lightbox" data-type="video" data-width="1280">
-                <button class="btn btn-primary">whole lecture<br>({{video_time|vtime:title}})</button>
+              <a href="{% static "lecture/videos/whole/" %}{{x.0}}.mp4#t={{x.1}},{{x.2}}" data-toggle="lightbox" data-type="video" data-width="1000">
+                <button class="btn btn-primary">video of the<br>sentence</button>
               </a>
             </div>
 
@@ -79,9 +76,61 @@
         </div>
         {% endfor %}
 
+				<nav>
+					<ul class="pagination justify-content-center">
+						<li class="page-item">
+              <a class="page-link" href="?q={{q}}&p=1" aria-label="Previous">
+								<span aria-hidden="true">&laquo;</span>
+								<span class="sr-only">Previous</span>
+							</a>
+						</li>
+            {% for i in page %}
+            {% if i == p %}
+            <li class="page-item active"><a class="page-link" href="?q={{q}}&p={{i}}">{{i}}</a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?q={{q}}&p={{i}}">{{i}}</a></li>
+            {% endif %}
+            {% endfor %}
+						<li class="page-item">
+              <a class="page-link" href="?q={{q}}&p={{last}}" aria-label="Next">
+								<span aria-hidden="true">&raquo;</span>
+								<span class="sr-only">Next</span>
+							</a>
+						</li>
+					</ul>
+				</nav>
+
+
+        {% for key in keyterm_attr %}
+        <div class="modal fade" id="t{{key}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">{{key}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body" style="text-align: left;">
+                <h6>This key term first appears in slide:</h6>
+                {% for x in keyterm_attr|getfirst:key %}
+                <p><a href="/lecture/{{x.0}}"> {{x.1}}</a></p>
+                {% endfor %}
+                <h6>Also appears in slides: </h6>
+                <div class="row">
+                  {% for x in keyterm_attr|getrelated:key %}
+                  <div class="col-md-3"><a href="/lecture/{{x.0}}">{{x.1}}</a><br></div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
       </div>
     </div>
-    
+
   </body>
 
 </html>
