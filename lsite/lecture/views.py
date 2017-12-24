@@ -77,8 +77,10 @@ def search(request):
             t = re.sub(r'^0', '1-0', x[0][7:].split('_')[0].replace('-0', '-').replace('--', '-0-'))
             ks = set([k.keyterm for k in Slidekeyterm.objects.filter(title=t)])
             keyterms |= set(ks)
-            result.append((t, x[1][:-3], x[2][:-3], x[3], x[0], ks))
-        # 0: title, 1: start time, 2: end time, 3: trans, 4: video name, 5: ks
+            index = t.split('-')
+            title_text = Slide.objects.filter(chapter=int(index[0])).filter(subchapter=int(index[1])).filter(page=int(index[2]))[0].title
+            result.append((t, x[1][:-3], x[2][:-3], x[3], x[0], ks, title_text))
+        # 0: title, 1: start time, 2: end time, 3: trans, 4: video name, 5: ks, 6: title_text
         return render(request, 'lecture/search.html', {'p': p//10, 'q': request.GET['q'], 'num': num, 'result': result, 'page': range(max(1, p//10-13), min(p//10+13, (num//10)+2)), 'last': num//10+1, 'keyterm_attr': getkeytermattr(keyterms)})
     else:
         slide_list = mk_slide_list()

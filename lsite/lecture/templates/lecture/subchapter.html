@@ -22,6 +22,12 @@
       var curposition = document.getElementById("side-bar");
     </script>
     <style>
+      .table th {
+           text-align: center;   
+      }
+      .table td {
+           text-align: center;   
+      }
 body {
   padding-top: 80px;
 }
@@ -156,9 +162,89 @@ body {
               <button class="btn btn-info">summary 2:<br>more content<br>({{chv_attr.chapter10time}})</button>
             </a>
           </div>
-          <a href="{% static "lecture/videos/whole/" %}{{slide}}.mp4" data-toggle="lightbox" data-type="video" data-width="1280">
-            <button class="btn btn-primary">whole lecture<br>({{chv_attr.time}})</button>
-          </a>
+          <div style="margin: 5px;">
+            <a href="{% static "lecture/videos/whole/" %}{{slide}}.mp4" data-toggle="lightbox" data-type="video" data-width="1280">
+              <button class="btn btn-primary">whole lecture<br>({{chv_attr.time}})</button>
+            </a>
+          </div>
+          <div id="keytermstable">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Key Terms</th>
+                  <th scope="col">Related<br> Key Terms</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for key, relations in keyterms.items %}
+                <tr>
+                  <td><a href="#" data-toggle="modal" data-target="#t{{key}}" data-trigger="hover" data-content="key term appearing in this slide">{{key}}</a></td>
+                  <td><a class="collapsed" data-toggle="collapse" href="#rel{{key}}" aria-expanded="false" aria-controls="{{key}}" data-trigger="hover" data-content="key term related to {{key}}"><i class="material-icons">expand_more</i></a></td>
+                  <div class="modal fade" id="t{{key}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLongTitle">{{key}}</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body" style="text-align: left;">
+                          <h6>This key term first appears in slide:</h6>
+                          {% for x in keyterm_attr|getfirst:key %}
+                          <p><a target="_blank" href="/lecture/{{x.0}}"> {{x.1}}</a></p>
+                          {% endfor %}
+                          <h6>Also appears in slides: </h6>
+                          <div class="row">
+                            {% for x in keyterm_attr|getrelated:key %}
+                            <div class="col-md-3"><a target="_blank"  href="/lecture/{{x.0}}">{{x.1}}</a><br></div>
+                            {% endfor %}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </tr>
+                <tr>
+                  <td colspan=2 style="padding: 0;">
+                  <div id="rel{{key}}" class="collapse" role="tabpanel" style="line-height: 25px">
+                    <div class="card-block">
+                      {% for relation in relations %}
+                      <a href="#" data-toggle="modal" data-target="#{{key}}{{relation.k2}}" data-trigger="hover" data-content="key term not appearing in this slide but related to {{key}}">{{relation.k2}}</a><br>
+                      <div class="modal fade" id="{{key}}{{relation.k2}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLongTitle">{{relation.k2}}</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body" style="text-align: left;">
+                              <h6>This key term first appears in slide:</h6>
+                              {% for x in keyterm_attr|getfirst:relation.k2 %}
+                              <p><a target="_blank" href="/lecture/{{x.0}}"> {{x.1}}</a></p>
+                              {% endfor %}
+                              <h6>Also appears in slides: </h6>
+                              <div class="row">
+                                {% for x in keyterm_attr|getrelated:relation.k2 %}
+                                <div class="col-md-3"><a target="_blank" href="/lecture/{{x.0}}">{{x.1}}</a><br></div>
+                                {% endfor %}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                  </td>
+                 </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <!--
           <div class="row">
             <div class="col-md-8"><div style="margin: 15px;"><h3 style="color: red;">Key Terms:</h3></div></div> related<br>keyterms:
           </div>
@@ -180,12 +266,12 @@ body {
                       <div class="modal-body" style="text-align: left;">
                         <h6>This key term first appears in slide:</h6>
                         {% for x in keyterm_attr|getfirst:key %}
-                        <p><a href="/lecture/{{x.0}}"> {{x.1}}</a></p>
+                        <p><a target="_blank" href="/lecture/{{x.0}}"> {{x.1}}</a></p>
                         {% endfor %}
                         <h6>Also appears in slides: </h6>
                         <div class="row">
                           {% for x in keyterm_attr|getrelated:key %}
-                          <div class="col-md-3"><a href="/lecture/{{x.0}}">{{x.1}}</a><br></div>
+                          <div class="col-md-3"><a target="_blank" href="/lecture/{{x.0}}">{{x.1}}</a><br></div>
                           {% endfor %}
                         </div>
                       </div>
@@ -210,12 +296,12 @@ body {
                         <div class="modal-body" style="text-align: left;">
                           <h6>This key term first appears in slide:</h6>
                           {% for x in keyterm_attr|getfirst:relation.k2 %}
-                          <p><a href="/lecture/{{x.0}}"> {{x.1}}</a></p>
+                          <p><a target="_blank" href="/lecture/{{x.0}}"> {{x.1}}</a></p>
                           {% endfor %}
                           <h6>Also appears in slides: </h6>
                           <div class="row">
                             {% for x in keyterm_attr|getrelated:relation.k2 %}
-                            <div class="col-md-3"><a href="/lecture/{{x.0}}">{{x.1}}</a><br></div>
+                            <div class="col-md-3"><a target="_blank" href="/lecture/{{x.0}}">{{x.1}}</a><br></div>
                             {% endfor %}
                           </div>
                         </div>
@@ -228,6 +314,7 @@ body {
               {% endfor %}
             </div>
           </div>
+          -->
           {% else %}
           there is no video for this slide
           {% load static %}
